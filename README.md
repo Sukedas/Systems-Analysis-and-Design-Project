@@ -17,9 +17,9 @@ Daniel Felipe Gómez Miranda – dfgomezm@udistrital.edu.co
 
 Julian David Cabrera Barragan – jdcabrerab@udistrital.edu.co
 
-Andrés Julián Vargas – ajvargasm@udistrital.edu.co
+Andrés Julián Vargas Medina – ajvargasm@udistrital.edu.co
 
-Geraldine Vargas – (email pending)
+Geraldine Alejandra Vargas Moreno – geavargasm@udistrital.edu.co
 
 🛠 Methodology
 
