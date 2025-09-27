@@ -1,0 +1,9 @@
+numpy
+pandas
+scikit-learn
+joblib
+click
+matplotlib
+seaborn
+notebook
+pytest
