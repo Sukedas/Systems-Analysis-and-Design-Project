@@ -71,6 +71,6 @@ PDF diagrams included via \includegraphics.
 
 Optional diagram editing/replication with TikZ if needed.
 
-📑 Final Report
+📑 Reports
 
-[Download the First Report](./Workshop#1.pdf)
+[Download the First Report](./Workshop-1.pdf)
