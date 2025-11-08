@@ -77,3 +77,5 @@ Optional diagram editing/replication with TikZ if needed.
 [Download the First Report](./Workshop-1.pdf)
 
 [Download the Second Report](./Workshop-2.pdf)
+
+[Download the Third Report](./Workshop-3.pdf)
