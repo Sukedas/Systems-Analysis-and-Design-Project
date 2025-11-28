@@ -1,0 +1,7 @@
+2025-11-28 16:30:41,016 - src.ingestion - INFO - Loaded data from ../src/Data/census_starter.csv. Shape: (3142, 26)
+2025-11-28 16:30:41,017 - src.ingestion - WARNING - Missing columns: ['microbusiness_density']
+2025-11-28 16:30:44,166 - src.models - INFO - Trained random_forest model.
+2025-11-28 16:30:44,182 - src.models - INFO - Evaluation metrics: {'rmse': np.float64(0.07277509251487345), 'mae': 0.04059567560862868}
+2025-11-28 16:30:44,210 - src.models - INFO - Model saved to reports/experiments\20251128_163041\rf_model.joblib
+2025-11-28 16:30:44,664 - src.experiments - INFO - Starting drift simulation...
+2025-11-28 16:30:44,667 - src.experiments - INFO - No significant drift detected.

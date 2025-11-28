@@ -1,0 +1,21 @@
+random_seed: 2025
+data_path: "../src/Data/census_starter.csv"
+output_dir: "reports/experiments"
+
+preprocessing:
+  imputation_strategy: "median"
+  scaling: "standard"
+
+models:
+  random_forest:
+    n_estimators: 100
+    max_depth: null
+  mlp:
+    hidden_layer_sizes: [64, 32]
+    max_iter: 200
+    learning_rate_init: 0.001
+
+drift_simulation:
+  noise_level: 0.1
+  drift_threshold_mean: 0.05
+  drift_threshold_pvalue: 0.01

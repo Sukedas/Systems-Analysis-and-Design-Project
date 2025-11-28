@@ -1,0 +1,12 @@
+random_seed: 2025
+output_dir: "reports/figs"
+
+grid:
+  width: 50
+  height: 50
+
+simulation:
+  steps: 100
+  perturbation_sigma: 0.05
+  growth_threshold: 0.6
+  decay_probability: 0.02

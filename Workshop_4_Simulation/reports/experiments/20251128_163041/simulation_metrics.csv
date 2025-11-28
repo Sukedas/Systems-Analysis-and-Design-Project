@@ -1,0 +1,3 @@
+timestamp,metric_name,value,notes
+2025-11-28T16:30:44.182184,initial_rmse,0.07277509251487345,
+2025-11-28T16:30:44.666107,drift_p_value,0.9999984833519566,Drift detected: False
