@@ -70,7 +70,7 @@ Packages: cite, amsmath, amssymb, graphicx, hyperref, enumitem, tikz.
 
 PDF diagrams included via \includegraphics.
 
-Optional diagram editing/replication with TikZ if needed.
+Diagram editing with TikZ if needed.
 
 📑 Reports
 
