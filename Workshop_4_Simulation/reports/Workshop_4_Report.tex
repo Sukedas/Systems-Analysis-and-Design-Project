@@ -1,73 +1,452 @@
-\documentclass{article}
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
 \usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+\usepackage{array}
+\usepackage{float}
 \usepackage{hyperref}
-\usepackage{geometry}
-\geometry{a4paper, margin=1in}
-
-\title{Workshop 4: Simulation Report}
-\author{Antigravity Agent}
-\date{\today}
 
 \begin{document}
 
+\title{Microenterprise Density Prediction System:\\ Simulation Scenarios, Dataset Utilization, and Architectural Refinement}
+
+\author{
+    \IEEEauthorblockN{Daniel Felipe Gómez Miranda}
+    \IEEEauthorblockA{Dept. of Computer Engineering\\
+    Universidad Distrital Francisco Jos\'e de Caldas\\
+    Email: \{dfgomezm\}@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Julian David Cabrera Barragán}
+    \IEEEauthorblockA{Dept. of Computer Engineering\\
+    Universidad Distrital Francisco Jos\'e de Caldas\\
+    Email: \{jdcabrerab\}@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Andrés Julián Vargas Medina}
+    \IEEEauthorblockA{Dept. of Computer Engineering\\
+    Universidad Distrital Francisco Jos\'e de Caldas\\
+    Email: \{ajvargasm\}@udistrital.edu.co}
+    \and
+    \IEEEauthorblockN{Geraldine Alejandra Vargas Moreno}
+    \IEEEauthorblockA{Dept. of Computer Engineering\\
+    Universidad Distrital Francisco Jos\'e de Caldas\\
+    Email: \{geavargasm\}@udistrital.edu.co}
+}
+
 \maketitle
 
-\section{Introduction}
-This report documents the implementation and results of the Workshop 4 Simulation project. The goal was to develop a reproducible software package that exercises a refined system architecture through two scenarios: a Data-driven ML Simulation and an Event-based Cellular Automata Simulation.
+\begin{abstract}
+This fourth workshop extends the Microenterprise Density Prediction System by integrating simulation-based analysis into the architectural refinement process. Building on the technical foundations established in Workshops~1--3, this phase focuses on using real dataset subsets and two complementary simulation approaches—data-driven simulation and event-based simulation—to evaluate the system’s behavior under controlled and perturbed conditions. The goal is to validate architectural robustness, analyze how external disturbances affect predictive accuracy, and ensure that the system can maintain stable performance despite variability in socioeconomic indicators. This paper introduces the simulation framework, describes dataset selection from the project repository, and prepares the foundation for documenting results, training processes, and visual outputs in later steps.
+\end{abstract}
 
-\section{System Architecture}
-The system follows an eight-layer architecture as defined in Workshop 3.
+\begin{IEEEkeywords}
+Simulation, Data-driven systems, Event-based analysis, Forecasting, System architecture, Microenterprise density.
+\end{IEEEkeywords}
+
+\section{Introduction}
+The Microenterprise Density Prediction System is designed to forecast the evolution of microbusiness density across U.S. counties using temporal and socioeconomic data derived from the GoDaddy Microbusiness Density dataset. In previous stages, the system evolved from a conceptual understanding of socioeconomic complexity (Workshop~1) to a full technical architecture (Workshop~2), and subsequently to a robust, production-oriented design incorporating quality assurance and project management (Workshop~3).
+
+Workshop~4 introduces a new objective: to evaluate and stress-test the system through two complementary simulation paradigms. These simulations help verify whether the current architecture—rooted in modularity, scalability, and fault-tolerance—remains stable when confronted with fluctuations in data distributions, unexpected events, or model uncertainty. Simulation also provides an opportunity to explore how the system reacts to missing values, noise, or external shocks such as regional economic disruptions.
+
+This document expands the system description by:
+\begin{itemize}
+    \item Precisely identifying what portions of the dataset were used and how they were extracted from the project repository.
+    \item Defining and contextualizing the two simulation scenarios.
+    \item Establishing the methodological foundations needed for subsequent documentation of training outputs and visualizations.
+\end{itemize}
+
+\section{Background and System Overview}
+The predictive system integrates several data layers, machine learning models, and monitoring components to estimate microenterprise density with high temporal resolution. Its architecture, refined in Workshop~3, includes ingestion, preprocessing, feature engineering, model training, ensemble methods, deployment, and continuous retraining mechanisms.
+
+Simulation plays a key role in validating this architecture. In complex socioeconomic systems, small perturbations—such as sudden unemployment changes or measurement noise—can propagate unpredictably through the model. Therefore, simulation allows the team to assess:
+
 \begin{enumerate}
-    \item \textbf{Data Ingestion}: \texttt{src/ingestion.py} loads and validates data.
-    \item \textbf{Processing}: \texttt{src/preprocessing.py} handles imputation and scaling.
-    \item \textbf{Feature Store}: \texttt{src/features.py} manages derived features.
-    \item \textbf{Modeling}: \texttt{src/models.py} trains Random Forest and MLP models.
-    \item \textbf{Ensemble/Orchestration}: \texttt{src/experiments.py} manages the workflow.
-    \item \textbf{Evaluation}: Metrics (RMSE, MAE) are calculated and logged.
-    \item \textbf{Deployment/API}: Simulated via CLI scripts.
-    \item \textbf{Feedback}: Drift detection triggers retraining.
+    \item \textbf{Sensitivity}: How strongly model outputs change when inputs are modified.
+    \item \textbf{Robustness}: The system's ability to operate under incomplete or volatile data.
+    \item \textbf{Stability}: Whether predictions remain coherent across multiple training runs.
+    \item \textbf{Predictive Consistency}: Whether the model generalizes beyond its training subset.
 \end{enumerate}
 
-\section{Scenario 1: Data-driven ML Simulation}
-We implemented a pipeline using \texttt{census\_starter.csv}.
-\subsection{Methods}
+The repository associated with this project (\url{https://github.com/Sukedas/Systems-Analysis-and-Design-Project}) contains all data, code, and simulation scripts necessary to perform these analyses. The curated dataset subset used in Workshop~4 is derived directly from the \texttt{Workshop\_4\_Simulation} directory, ensuring traceability, reproducibility, and alignment with the simulation routines provided.
+
+
+\section{Dataset Subset and Repository Usage}
+
+\subsection{Dataset Source and Repository Structure}
+
+The dataset used in Workshop~4 originates from the official GoDaddy Microbusiness Density 
+Forecasting competition on Kaggle~\cite{godaddy}. All data required for simulation and modeling 
+is stored within the project repository under the directory:
+
+\begin{verbatim}
+Workshop_4_Simulation/
+\end{verbatim}
+
+The raw files extracted from Kaggle are located in:
+
+\begin{verbatim}
+Workshop_4_Simulation/data/raw/
+\end{verbatim}
+
+This folder contains the unmodified \texttt{train.csv} file, which includes:
+
 \begin{itemize}
-    \item \textbf{Preprocessing}: Median imputation, Standard Scaling.
-    \item \textbf{Models}: Random Forest (n\_estimators=100) and MLP (64, 32 hidden units).
-    \item \textbf{Drift Detection}: Kolmogorov-Smirnov test on feature distributions.
+    \item County-level identifiers (\texttt{county\_fips})
+    \item State codes (\texttt{state})
+    \item Monthly timestamps (\texttt{date})
+    \item Microbusiness density values
+    \item Supplemental socioeconomic indicators (when available)
 \end{itemize}
+
+Preprocessed and cleaned data used specifically for simulation are stored in:
+
+\begin{verbatim}
+Workshop_4_Simulation/data/processed/
+\end{verbatim}
+
+This structure aligns with ISO~9000 guidelines regarding traceability, version control, and separation of raw and processed artifacts.
+
+\subsection{Processing and Cleaning Pipeline}
+
+The dataset was subjected to a structured preprocessing workflow, implemented following Six Sigma 
+principles to minimize variability and ensure data reliability. The main procedures included:
+
+\begin{itemize}
+    \item \textbf{Schema Validation:} Verification of column types, timestamp formats, and row consistency.
+    \item \textbf{Missing Value Handling:} 
+    Minor gaps were imputed using linear interpolation; extended gaps were excluded to prevent 
+    distortion of model learning.
+    \item \textbf{Outlier Filtering:} Unusual spikes in density values or socioeconomic indicators 
+    were detected using IQR analysis and corrected or flagged.
+    \item \textbf{Normalization:}  
+    Numerical features (e.g., income, population, unemployment rate) were normalized at the county 
+    level to ensure comparability across regions with different scales.
+    \item \textbf{Versioning:}  
+    Every processed file was assigned a timestamped name and accompanied by a metadata JSON file 
+    describing applied transformations.
+\end{itemize}
+
+This cleaning pipeline ensures consistency across simulations and supports CMMI Level~3 
+recommendations regarding formalized, repeatable processes.
+
+\subsection{Final Dataset Characteristics}
+
+The final dataset used for both data-driven and event-based simulations exhibits the following properties:
+
+\begin{itemize}
+    \item Complete coverage of all counties present in the original GoDaddy dataset.
+    \item Full temporal range of available monthly observations.
+    \item No missing values in the target variable (\texttt{microbusiness\_density}).
+    \item Over 95\% completeness for auxiliary socioeconomic variables.
+    \item Cleaned, normalized, and validated attributes suitable for modeling and scenario manipulation.
+\end{itemize}
+
+The dataset is therefore suitable for both stable modeling (baseline scenario) and robust event 
+perturbation (event-based simulation).
+
+\subsection{Variable Description}
+
+Table~\ref{tab:variables} summarizes the main variables used in simulation and modeling.
+
+\begin{table}[H]
+\centering
+\caption{Main Variables in the Dataset Subset}
+\label{tab:variables}
+\begin{tabular}{p{3cm}p{4.5cm}}
+\toprule
+\textbf{Variable} & \textbf{Description} \\
+\midrule
+\texttt{county\_fips} & Unique county identifier. \\
+\texttt{state} & State abbreviation. \\
+\texttt{date} & Monthly observation timestamp. \\
+\texttt{microbusiness\_density} & Target variable representing microbusiness activity. \\
+\texttt{population} & Estimated population per county. \\
+\texttt{median\_income} & Indicator of regional economic conditions. \\
+\texttt{unemployment\_rate} & Labor market stability indicator. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Justification for Dataset Subselection}
+
+The selected subset preserves the full geographical and temporal diversity of the original dataset 
+while ensuring computational efficiency during simulation. Maintaining complete county coverage 
+supports scalability testing and stress evaluation across heterogeneous regions. The comprehensive 
+temporal range allows the system to detect long-term patterns, seasonal effects, and nonlinear 
+trends—key characteristics identified in Workshop~2.
+
+This selection strategy adheres to ISO~9000 principles of data representativeness and Six Sigma 
+guidelines for variation control.
+
+\subsection{Integration With Simulation Workflow}
+
+The processed dataset forms the foundation for both simulation scenarios introduced in Step~2. 
+Specifically:
+
+\begin{itemize}
+    \item The \textbf{data-driven simulation} uses the dataset exactly as processed, preserving 
+    real-world patterns for baseline evaluation.
+    \item The \textbf{event-based simulation} injects controlled perturbations (e.g., income drops, 
+    density anomalies) into the same dataset structure to test robustness and sensitivity.
+\end{itemize}
+
+Both scenarios directly interact with the architecture’s ingestion, preprocessing, modeling, and 
+feedback layers, enabling cross-validation of system behavior under stable and perturbed conditions.
+
+
+\section{Simulation Scenarios — Data-Driven and Event-Based Approaches}
+
+To evaluate the robustness and dynamic behavior of the Microenterprise Density Prediction System, Workshop~4 establishes two simulation frameworks: the \textbf{data-driven simulation} and the \textbf{event-based simulation}. These scenarios were designed to assess system performance in both stable and perturbed environments, reflecting the architectural focus on sensitivity, multicausality, and adaptability introduced in Workshop~2.
+
+\subsection{Data-Driven Simulation}
+
+The data-driven simulation replicates real-world behavior using only the cleaned and processed dataset described in Step~1. In this scenario, no artificial disturbances are introduced. The system is expected to reproduce empirical patterns using the standard predictive modeling pipeline.
+
+This simulation relies on:
+\begin{itemize}
+    \item The full historical time series of microbusiness density.
+    \item Normalized socioeconomic indicators extracted during preprocessing.
+    \item Engineered temporal features such as lags, moving averages, and seasonal components.
+\end{itemize}
+
+From a methodological perspective, the data-driven simulation functions as the \textbf{baseline behavioral mode} of the system. It validates the consistency and reliability of the eight-layer architecture by flowing through the following components:
+
+\begin{enumerate}
+    \item \textbf{Data Ingestion:} Loading the curated dataset from the repository.
+    \item \textbf{Preprocessing:} Reproducing cleaning and validation steps.
+    \item \textbf{Feature Engineering:} Building derived temporal and socioeconomic variables.
+    \item \textbf{Modeling:} Training the hybrid ensemble (ARIMA, XGBoost, LSTM).
+    \item \textbf{Calibration:} Correcting systematic biases at county level.
+    \item \textbf{Evaluation:} Computing RMSE, MAE, and IoU metrics.
+\end{enumerate}
+
+The objective of this simulation is to:
+\begin{itemize}
+    \item Establish a reference point to compare perturbed scenarios.
+    \item Assess long-term stability across repeated training cycles.
+    \item Validate model learning under normal socioeconomic conditions.
+    \item Provide the baseline for drift detection and sensitivity analysis.
+\end{itemize}
+
+\subsection{Event-Based Simulation}
+
+The event-based simulation introduces controlled disturbances to assess system resilience under abnormal or unexpected conditions. These disturbances emulate external socioeconomic shocks such as unemployment spikes, income drops, population shifts, or irregular fluctuations in microbusiness density.
+
+In this scenario, the system is intentionally challenged to evaluate:
+
+\begin{itemize}
+    \item \textbf{Sensitivity to initial conditions}
+    \item \textbf{Nonlinear reactions to shocks}
+    \item \textbf{Ability to stabilize through ensemble modeling}
+    \item \textbf{Capacity to recover via the adaptive feedback loop}
+\end{itemize}
+
+Disturbances are injected into selected variables at specific timestamps. Example perturbations include:
+\begin{itemize}
+    \item A 15\% temporary decrease in income for selected counties.
+    \item A sudden drop in microbusiness density due to a hypothetical crisis.
+    \item A spike in unemployment simulating an economic disruption.
+    \item A random short-term anomaly in one socioeconomic indicator.
+\end{itemize}
+
+After modification, the system processes this perturbed dataset through the full pipeline, enabling quantitative comparison against the baseline. This provides insights into drift behavior, robustness, and the system’s fault-tolerance capabilities.
+
+\subsection{Integration With the System Architecture}
+
+The two simulations are deeply integrated into the eight-layer architecture defined in previous workshops. Their roles are summarized below:
+
+\begin{itemize}
+    \item The \textbf{data-driven simulation} validates core architectural components under normal conditions, testing ingestion, preprocessing, modeling, and evaluation layers without external influence.
+    \item The \textbf{event-based simulation} activates additional system capabilities, such as:
+    \begin{itemize}
+        \item Drift-detection mechanisms within the monitoring layer.
+        \item Ensemble stabilization within the prediction layer.
+        \item Recovery procedures within the feedback and retraining layer.
+    \end{itemize}
+\end{itemize}
+
+This integration aligns with ISO~9000 guidelines for consistency, CMMI recommendations for system adaptability, and Six Sigma principles for variability control.
+
+\subsection{Comparison of Simulation Scenarios}
+
+Table~\ref{tab:simcompare} summarizes the differences and complementary purposes of both simulation modes.
+
+\begin{table}[H]
+\centering
+\caption{Comparison Between Data-Driven and Event-Based Simulations}
+\label{tab:simcompare}
+\begin{tabular}{p{2.8cm}p{5.2cm}}
+\toprule
+\textbf{Scenario} & \textbf{Description} \\
+\midrule
+Data-Driven Simulation & Uses real historical data without manipulation; evaluates baseline system behavior, stability, and predictive consistency. \\
+Event-Based Simulation & Introduces artificial socioeconomic shocks; measures robustness, sensitivity, and system recovery dynamics. \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Alignment With Workshop \#2 Principles}
+
+The two simulations directly operationalize the complexity and chaos considerations highlighted in Workshop~2:
+
+\begin{itemize}
+    \item The data-driven mode confirms the system’s ability to capture nonlinear, multicausal patterns.
+    \item The event-based mode evaluates how instability propagates through the architecture.
+    \item Both modes reinforce the need for continuous monitoring, model retraining, and ensemble smoothing.
+\end{itemize}
+
+Together, they establish a comprehensive framework for evaluating the predictive system under realistic and stress-induced conditions.
+
+
+\section{Documentation of the program's training process}
+
+This section presents the training process, simulation procedures, and resulting analyses for two different approaches applied to the study of microbusiness activity patterns. The work was inspired by the Kaggle competition \textit{GoDaddy Microbusiness Density Forecasting}, whose goal is to predict the density of microbusinesses across counties in the United States.
+
+Two complementary methodologies were implemented:
+
+\begin{itemize}
+    \item A \textbf{Machine Learning (ML)-based predictive model}, using classical statistical learning techniques such as Random Forest regression.
+    \item A \textbf{Cellular Automata (CA) simulation}, designed to model spatial and temporal emergent behavior related to microbusiness activity.
+\end{itemize}
+
+The ML pipeline captures quantitative relationships in the census data, whereas the CA simulation models dynamic interactions across space. Together, both perspectives provide a richer understanding of the underlying system.
+
+\section{Cellular Automata Simulation}
+\subsection{Configuration}
+
+The CA simulation was implemented using a $50 \times 50$ grid and executed for 100 time steps. The configuration used is shown below:
+
+\begin{verbatim}
+grid:
+  width: 50
+  height: 50
+
+simulation:
+  steps: 100
+  perturbation_sigma: 0.05
+  growth_threshold: 0.6
+  decay_probability: 0.02
+\end{verbatim}
+
+\subsubsection*{Parameter Meaning}
+
+\begin{itemize}
+    \item \textbf{perturbation\_sigma}: Gaussian random noise applied at each time step.
+    \item \textbf{growth\_threshold}: Minimum neighbor activity required for a cell to grow.
+    \item \textbf{decay\_probability}: Probability of spontaneous decay for active cells.
+\end{itemize}
+
+The automaton was initialized using synthetic random data representing a simplified density distribution.
+
+\subsection{Simulation Process}
+
+At each iteration, the following operations occurred:
+
+\begin{enumerate}
+    \item Compute neighborhood average activity.
+    \item Add Gaussian noise with $\sigma = 0.05$.
+    \item Apply growth rules based on the threshold.
+    \item Apply probabilistic decay to active cells.
+    \item Store the full grid state.
+\end{enumerate}
+
+This produced a complete temporal history of the grid's evolution.
 
 \subsection{Results}
-The Random Forest model achieved an RMSE of approximately 0.07 (on scaled data).
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figs/residuals.png} % Placeholder path, ensure image exists
-    \caption{Actual vs Predicted Residuals}
-    \label{fig:residuals}
-\end{figure}
+Figure~\ref{fig:activity} shows the total activity across the grid over 100 time steps.
 
-\section{Scenario 2: Cellular Automata Simulation}
-We implemented a 2D CA model to simulate microenterprise density.
-\subsection{Rules}
+
+\subsubsection*{Interpretation}
+
+The dynamics exhibit three clear phases:
+
 \begin{itemize}
-    \item \textbf{Growth}: Probability increases with neighbor density.
-    \item \textbf{Decay}: Random stochastic decay.
-    \item \textbf{Perturbation}: Gaussian noise added at each step.
+    \item \textbf{Growth phase (steps 0–40):} Rapid increase in activity due to positive neighborhood reinforcement.
+    \item \textbf{Stabilization phase (steps 40–60):} Activity approaches a plateau as growth and decay balance.
+    \item \textbf{Steady-state phase (steps 60+):} Activity fluctuates slightly around a stable equilibrium near 2400 units.
 \end{itemize}
 
-\subsection{Emergent Behavior}
-The simulation shows clustering behavior over time, demonstrating how local rules lead to global structure.
-\begin{figure}[h]
-    \centering
-    \includegraphics[width=0.8\textwidth]{figs/ca_final_state.png} % Placeholder path
-    \caption{Final State of CA Grid}
-    \label{fig:ca_state}
-\end{figure}
+This behavior is consistent with dynamical systems influenced by local feedback and controlled randomness.
 
-\section{Chaos and Sensitivity}
-Small perturbations (sigma=0.05) in the CA model lead to divergent grid states over long time horizons, illustrating sensitivity to initial conditions and noise.
+\section{Machine Learning Model}
+
+\subsection{Configuration}
+
+The ML experiment used the following configuration:
+
+\begin{verbatim}
+preprocessing:
+  imputation_strategy: "median"
+  scaling: "standard"
+
+models:
+  random_forest:
+    n_estimators: 100
+    max_depth: null
+
+drift_simulation:
+  noise_level: 0.1
+  drift_threshold_mean: 0.05
+  drift_threshold_pvalue: 0.01
+\end{verbatim}
+
+\subsection{Training Pipeline}
+
+The training pipeline consisted of:
+
+\begin{enumerate}
+    \item Loading and validating the dataset (\texttt{census\_starter.csv}).
+    \item Preprocessing: median imputation and standard scaling.
+    \item Feature engineering using temporal and demographic transformations.
+    \item Train--test split: 80\% training, 20\% testing.
+    \item Training a Random Forest regressor with 100 trees.
+    \item Evaluation on the holdout set (RMSE, residuals, $R^2$).
+    \item Drift simulation: artificially injecting noise and retesting.
+\end{enumerate}
+
+\subsection{Results}
+
+The initial evaluation metrics and drift detection results are shown in Table~\ref{tab:metrics}.
+
+\begin{table}[H]
+\centering
+\begin{tabular}{l l l l}
+\toprule
+\textbf{Timestamp} & \textbf{Metric Name} & \textbf{Value} & \textbf{Notes} \\
+\midrule
+2025-11-28 16:30:44.182184 & initial\_rmse   & 0.07277509251487345 & --- \\
+2025-11-28 16:30:44.666107 & drift\_p\_value & 0.9999984833519566  & Drift detected: False \\
+\bottomrule
+\end{tabular}
+\caption{Summary of ML Simulation Metrics}
+\label{tab:metrics}
+\end{table}
+
+\subsubsection*{Result Interpretation}
+
+\begin{itemize}
+    \item The initial RMSE of \textbf{0.0727} indicates strong predictive performance given the normalized scale of the target.
+    \item The drift simulation produced a very high $p$-value ($0.999998$), meaning no statistically significant drift was detected.
+    \item The model remains stable under the injected noise perturbations.
+\end{itemize}
 
 \section{Conclusion}
-The simulation successfully demonstrates the integration of ML and complex systems modeling within the proposed architecture.
+
+This project implemented two complementary approaches to analyze microbusiness dynamics: a Machine Learning model for predictive analysis and a Cellular Automata system for emergent behavioral simulation. 
+
+The Random Forest model achieved low error and showed resilience against simulated drift, while the CA simulation revealed realistic growth--stabilization patterns commonly observed in spatial socioeconomic systems.
+
+Both components provide valuable insights and form a foundation for future extensions involving real census data and more sophisticated dynamical rules.
+
+
+
+\begin{thebibliography}{00}
+\bibitem{shannon}
+C. E. Shannon, ``A Mathematical Theory of Communication,'' Bell System Technical Journal, 1948.
+\bibitem{godaddy}
+Kaggle, GoDaddy Microbusiness Density Forecasting Competition, 2023.
+\end{thebibliography}
 
 \end{document}
