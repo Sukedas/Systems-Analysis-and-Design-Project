@@ -81,3 +81,6 @@ Diagram editing with TikZ if needed.
 [Download the Third Report](./Workshop-3.pdf)
 
 [Download the Fourth Report](./Workshop-4.pdf)
+
+[Download the Final Report](./Final_Report.pdf)
+
