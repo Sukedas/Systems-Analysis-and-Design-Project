@@ -59,12 +59,23 @@ The system follows a modular 8-layer architecture:
 3. Ensure data files are in `/data`.
 
 ### Usage
-Run the full pipeline:
+### Usage
+The full pipeline requires `train.csv` and `test.csv`.
+If only `census_starter.csv` is available, the system will run in **Limited Mode**, performing only data loading verification and exploration.
+
+Run the full pipeline (or limited mode):
 ```python
 from src.api_connector import Pipeline
 pipeline = Pipeline()
-pipeline.run(model_type='rf') # or 'xgb'
+metrics, drift = pipeline.run(model_type='rf')
 ```
+
+### Data Source
+Datasets can be downloaded from the [GoDaddy Microbusiness Density Forecasting](https://www.kaggle.com/competitions/godaddy-microbusiness-density-forecasting/data) competition.
+Data should be placed in the `/data` directory:
+- `data/train.csv`
+- `data/test.csv`
+- `data/census_starter.csv` (Required for limited mode)
 
 ### Simulation
 Run the Cellular Automata:
@@ -76,4 +87,6 @@ ca.run_simulation(steps=50)
 ca.visualize_step()
 ```
 
-
+### Authors
+- Antigravity (Agentic AI)
+- Julia (Lead Developer)
