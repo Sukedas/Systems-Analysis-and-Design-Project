@@ -50,24 +50,53 @@ The system follows a modular 8-layer architecture:
     README.md           # This file
 ```
 
-### Installation
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   pip install pandas numpy scikit-learn xgboost matplotlib
+### Step-by-Step Execution Guide
+
+Follow these steps to set up and run the project:
+
+#### 1. Environment Setup
+Clone the repository and install the required dependencies:
+```bash
+# Clone the repository (if you haven't already)
+git clone <repository_url>
+cd Final_Project
+
+# Install Python dependencies
+pip install pandas numpy scikit-learn xgboost matplotlib
+```
+
+#### 2. Data Setup
+1. Download the dataset from Kaggle: [GoDaddy Microbusiness Density Forecasting](https://www.kaggle.com/competitions/godaddy-microbusiness-density-forecasting/data).
+2. Extract the files and place them in the `data/` directory.
+3. Ensure the directory structure looks like this:
    ```
-3. Ensure data files are in `/data`.
+   /Final_Project
+       /data
+           census_starter.csv  (Required)
+           train.csv           (Optional - for full training)
+           test.csv            (Optional - for full training)
+   ```
 
-### Usage
-### Usage
-The full pipeline requires `train.csv` and `test.csv`.
-If only `census_starter.csv` is available, the system will run in **Limited Mode**, performing only data loading verification and exploration.
+#### 3. Running the Pipeline
+You can run the system directly from the terminal.
 
-Run the full pipeline (or limited mode):
-```python
-from src.api_connector import Pipeline
-pipeline = Pipeline()
-metrics, drift = pipeline.run(model_type='rf')
+**Option A: Limited Mode (Census Data Only)**
+If you only have `census_starter.csv`, the system will load the data and verify the setup without training models.
+```bash
+python -m src.api_connector
+```
+
+**Option B: Full Mode (Train & Predict)**
+If you have `train.csv` and `test.csv`, the system will perform Feature Engineering, Model Training (Random Forest/XGBoost), and generate a `submission.csv`.
+```bash
+python -m src.api_connector
+```
+
+#### 4. Running Simulation (Cellular Automata)
+To visualize the complex system simulation:
+```bash
+# Run the simulation script directly (if available as main) or via Python shell:
+python -c "from src.cellular_automata import MicroEnterpriseCA; ca = MicroEnterpriseCA(); ca.initialize_random(); ca.run_simulation(); ca.visualize_step()"
 ```
 
 ### Data Source
@@ -86,5 +115,4 @@ ca.initialize_random()
 ca.run_simulation(steps=50)
 ca.visualize_step()
 ```
-
 
