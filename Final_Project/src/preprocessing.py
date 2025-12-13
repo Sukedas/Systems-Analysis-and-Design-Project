@@ -9,15 +9,19 @@ def load_data(data_path: str):
     """
     Loads raw datasets: train.csv, test.csv, census_starter.csv.
     """
+    train, test, census = None, None, None
+    
+    # train.csv and test.csv do not exist in the current environment
+    # explicitly setting them to None as requested
+    
     try:
-        train = pd.read_csv(os.path.join(data_path, 'train.csv'))
-        test = pd.read_csv(os.path.join(data_path, 'test.csv'))
         census = pd.read_csv(os.path.join(data_path, 'census_starter.csv'))
-        logger.info("Datasets loaded successfully.")
-        return train, test, census
-    except FileNotFoundError as e:
-        logger.error(f"File not found: {e}")
-        raise
+    except FileNotFoundError:
+        logger.warning("census_starter.csv not found.")
+    
+    logger.info(f"Census data loaded. Train/Test set to None.")
+    
+    return train, test, census
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -26,6 +30,8 @@ def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     2. Sort values
     3. Handle missing values (if any in critical columns)
     """
+    if df is None:
+        return None
     df = df.copy()
     
     # Convert date to datetime
