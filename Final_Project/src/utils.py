@@ -42,7 +42,7 @@ def load_config():
     Returns a dictionary of config values.
     """
     return {
-        "DATA_PATH": "../data",
-        "OUTPUT_PATH": "../outputs",
+        "DATA_PATH": "data",
+        "OUTPUT_PATH": "outputs",
         "SEED": 42
     }

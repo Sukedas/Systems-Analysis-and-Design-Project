@@ -8,6 +8,9 @@ from .evaluation import calculate_metrics
 from .drift_detection import detect_drift
 from .submission_generator import generate_submission_file
 
+from .cellular_automata import MicroEnterpriseCA
+from .event_simulation import simulate_future_scenario, apply_shock
+
 logger = setup_logger("api_connector")
 
 class Pipeline:
@@ -66,15 +69,60 @@ class Pipeline:
             submission_df.to_csv(submission_path, index=False)
             logger.info(f"Submission saved to {submission_path}")
             
+            # 7. Run Simulation & Event Sim (Optional based on flag or always)
+            logger.info("Running Simulations...")
+            self.run_simulations(census)
+
             return metrics, drift_result
         else:
             logger.warning("Training data not available. Skipping Feature Engineering, Training, and Submission.")
+            
+            # Limited Mode: Run Simulation demo if census data exists
             if census is not None:
                 logger.info(f"Census data available. entries: {len(census)}")
-                logger.info(f"Census columns: {list(census.columns)}")
-                # Potentially run simulation or EDA here if requested
+                logger.info("Running Limited Mode: Cellular Automata & Event Simulation")
+                
+                self.run_simulations(census)
             
             return None, None
+
+    def run_simulations(self, census_data):
+        # Ensure output directory exists because it might not be created in Limited Mode
+        os.makedirs(self.output_path, exist_ok=True)
+
+        # 1. Cellular Automata
+        logger.info("Running Cellular Automata Simulation...")
+        ca = MicroEnterpriseCA(grid_size=50)
+        # Initialize with random or census density proxy (e.g. mean of normalized population)
+        density = 0.1
+        if census_data is not None and 'pct_bb_2021' in census_data.columns:
+             # Example proxy: use mean broadband access as proxy for initial density * 0.01
+             density = census_data['pct_bb_2021'].mean() / 1000.0 
+             density = max(0.05, min(0.3, density)) # Clip
+        
+        ca.initialize_random(density=density)
+        ca.run_simulation(steps=30)
+        
+        ca_output_path = os.path.join(self.output_path, 'ca_simulation_final.png')
+        ca.visualize_step(step_idx=30, output_path=ca_output_path)
+        
+        # 2. Event Simulation
+        logger.info("Running Event Simulation...")
+        # Simulating a hypothetical county trajectory
+        future_traj = simulate_future_scenario(model=None, current_data=None, steps=24)
+        
+        # Save event sim plot
+        import matplotlib.pyplot as plt
+        plt.figure(figsize=(10, 5))
+        plt.plot(future_traj, marker='o', linestyle='-')
+        plt.title("Event Simulation: Future Density Projection with Shocks")
+        plt.xlabel("Months")
+        plt.ylabel("Projected Density")
+        plt.grid(True)
+        event_output_path = os.path.join(self.output_path, 'event_simulation_trajectory.png')
+        plt.savefig(event_output_path)
+        plt.close()
+        logger.info(f"Event simulation plot saved to {event_output_path}")
 
 if __name__ == "__main__":
     # Example usage

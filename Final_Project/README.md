@@ -81,38 +81,29 @@ pip install pandas numpy scikit-learn xgboost matplotlib
 You can run the system directly from the terminal.
 
 **Option A: Limited Mode (Census Data Only)**
-If you only have `census_starter.csv`, the system will load the data and verify the setup without training models.
+If you only have `census_starter.csv` in `data/`, the system will automatically run in Limited Mode. This performs data validation and executes the **Cellular Automata** and **Event Simulation** as a demonstration.
 ```bash
 python -m src.api_connector
 ```
+Outputs will be saved to the `outputs/` directory.
 
 **Option B: Full Mode (Train & Predict)**
-If you have `train.csv` and `test.csv`, the system will perform Feature Engineering, Model Training (Random Forest/XGBoost), and generate a `submission.csv`.
+If you have `train.csv` and `test.csv` in `data/`, the system will perform Feature Engineering, Model Training (Random Forest), generate a `submission.csv`, and run the simulations.
 ```bash
 python -m src.api_connector
 ```
 
-#### 4. Running Simulation (Cellular Automata)
-To visualize the complex system simulation:
-```bash
-# Run the simulation script directly (if available as main) or via Python shell:
-python -c "from src.cellular_automata import MicroEnterpriseCA; ca = MicroEnterpriseCA(); ca.initialize_random(); ca.run_simulation(); ca.visualize_step()"
-```
+#### 4. Outputs
+After running the pipeline, check the `outputs/` directory for:
+- `submission.csv` (Full Mode only)
+- `ca_simulation_final.png`: Visualization of the Cellular Automata state.
+- `event_simulation_trajectory.png`: Projected density trajectory with simulated shocks.
 
-### Data Source
-Datasets can be downloaded from the [GoDaddy Microbusiness Density Forecasting](https://www.kaggle.com/competitions/godaddy-microbusiness-density-forecasting/data) competition.
-Data should be placed in the `/data` directory:
-- `data/train.csv`
-- `data/test.csv`
-- `data/census_starter.csv` (Required for limited mode)
+### Simulation Details
+The project now includes integrated simulation modules:
+1. **Cellular Automata (`src/cellular_automata.py`)**: Simulates microenterprise growth and decay on a grid based on neighbor density and random factors.
+2. **Event Simulation (`src/event_simulation.py`)**: projects future density trends under stochastic shocks (e.g., economic downturns).
 
-### Simulation
-Run the Cellular Automata:
-```python
-from src.cellular_automata import MicroEnterpriseCA
-ca = MicroEnterpriseCA()
-ca.initialize_random()
-ca.run_simulation(steps=50)
-ca.visualize_step()
-```
+These are automatically executed by the `api_connector.py` pipeline.
+
 

@@ -58,7 +58,15 @@ class MicroEnterpriseCA:
             self.step()
         return history
 
-    def visualize_step(self, step_idx=None):
+    def visualize_step(self, step_idx=None, output_path=None):
+        plt.figure(figsize=(10, 8))
         plt.imshow(self.grid, cmap='Greens')
-        plt.title(f"CA State - Step {step_idx}")
-        plt.show()
+        title = f"CA State - Step {step_idx}" if step_idx is not None else "CA State"
+        plt.title(title)
+        
+        if output_path:
+            plt.savefig(output_path)
+            logger.info(f"Saved CA visualization to {output_path}")
+            plt.close()
+        else:
+            plt.show()
