@@ -76,6 +76,4 @@ ca.run_simulation(steps=50)
 ca.visualize_step()
 ```
 
-### Authors
-- Antigravity (Agentic AI)
-- Julia (Lead Developer)
+
